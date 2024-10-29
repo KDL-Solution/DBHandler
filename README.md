@@ -27,8 +27,8 @@ How to Use
 ## Uploader 
 
 ```python
-#from uploader import LMDBUploader as uploader
-from uploader import HDF5Uploader as uploader
+#from uploader import LMDBUploader as Uploader
+from uploader import HDF5Uploader as Uploader
 # 이미지와 라벨 경로
 data_pairs = [
     ("./data/img1.jpg", "./data/label1.json"),
@@ -39,7 +39,7 @@ data_pairs = [
 ]
 
 # 업로더 생성
-uploader = LMDBUploader("lmdb_test", mode='w', max_workers=10, verbose=True)
+uploader = Uploader("test", mode='w', max_workers=10, verbose=True)
 
 # 실행
 uploader.upload(data_pairs)
