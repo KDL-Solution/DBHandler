@@ -71,9 +71,7 @@ class LMDBHandler(FileHandler):
         
         self._put_img(img, idx)
         self._put_annots(annots, idx)
-
-        self._put_num_data(idx)
-
+        
         if self.verbose:
             print(f"Data {idx} inserted.")
             

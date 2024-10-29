@@ -1,2 +1,6 @@
-data/*
-__pycache__/*
+**/data/*
+**/__pycache__/*
+**/*.db
+**/*.mdb
+**/*.sqlite
+**/*.hdf5
