@@ -2,8 +2,7 @@ import os
 import cv2
 import json
 from multiprocessing import Pool, Lock
-from lmdb_handler import LMDBHandler
-from typing import List
+from handler import LMDBHandler
 from tqdm import tqdm
 
 # Pool의 initializer에서 호출할 초기화 함수
@@ -68,7 +67,7 @@ if __name__ == "__main__":
     ]
     
     # LMDB 업로더 생성
-    uploader = LMDBUploader("lmdb_test",max_workers=10, verbose=True)
+    uploader = LMDBUploader(r"C:\Users\korea\Desktop\CODES\LABELING\FileHandler\lmdb_test",max_workers=10, verbose=True)
     
     # 업로드 실행
     uploader.upload(data_pairs)

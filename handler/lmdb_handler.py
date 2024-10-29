@@ -1,11 +1,11 @@
 import lmdb
 import os
 import cv2
-import zipfile
 import json
 import shutil
 import numpy as np
-import time
+from pathlib import Path
+from .file_handler import FileHandler
 
 LMDB_MAP_SIZE = 10 * 1024**4  # 10 TiB
 
@@ -18,13 +18,15 @@ def decode(string_data):
     return string_data.decode("utf-8")
 
 
-class LMDBHandler:
+class LMDBHandler(FileHandler):
     def __init__(self, db_path, mode="r", force=False, verbose=False, max_readers=512):
-
-        self.db_path = db_path
+        self.db_path = Path(db_path).resolve()
         self.verbose = verbose
+        self.mode = mode
+        
         if mode == "r":
-            os.makedirs(db_path, exist_ok=True)
+            if not self.db_path.exists():
+                raise FileNotFoundError(f"{self.db_path} does not exist.")
             self.env = lmdb.open(self.db_path,
                                  readonly=True,
                                  lock=False,
@@ -34,20 +36,20 @@ class LMDBHandler:
             if verbose:
                 print(f"{self.db_path} opened in READ-ONLY mode")
         elif mode == "w":
-            if os.path.exists(self.db_path):
+            if self.db_path.exists():
                 if not force:
                     raise FileExistsError(f"{self.db_path} already exists. Use force=True to overwrite.")
-                shutil.rmtree(self.db_path)
-            os.makedirs(db_path, exist_ok=True)
-                
-            self.env = lmdb.open(self.db_path,
+                self.db_path.rmdir()
+            self.db_path.mkdir(parents=True, exist_ok=True)
+            self.env = lmdb.open(str(self.db_path),
                                  map_size=int(LMDB_MAP_SIZE),
                                  readonly=False,
                                  max_readers=max_readers,)
+            
             if verbose:
                 print(f"{self.db_path} opened in WRITE mode")
         elif mode == "a":
-            os.makedirs(db_path, exist_ok=True)
+            self.db_path.mkdir(parents=True, exist_ok=True)
             self.env = lmdb.open(self.db_path, 
                                  readonly=False, 
                                  max_readers=max_readers)
@@ -130,6 +132,11 @@ class LMDBHandler:
             
     def __len__(self):
         return self._get_num_data()
+    
+    def close(self):
+        self.env.close()
+        if self.verbose:
+            print(f"Closed {self.db_path}")
 
     def __del__(self):
         if hasattr(self, "env") and self.env is not None:
