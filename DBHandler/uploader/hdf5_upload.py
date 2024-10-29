@@ -2,7 +2,7 @@ import cv2
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
-from handler import HDF5Handler
+from DBHandler.hdf5_handler import HDF5Handler
 
 
 class HDF5Uploader:

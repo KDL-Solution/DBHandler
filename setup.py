@@ -7,8 +7,8 @@ def parse_requirements(filename):
         return [line.strip() for line in file if line and not line.startswith("#")]
 
 setup(
-    name="FileHandler",
-    version="0.1.0",
+    name="DBHandler",
+    version="0.1.1",
     packages=find_packages(),
     include_package_data=True,
     install_requires=parse_requirements("requirements.txt"),
@@ -17,7 +17,7 @@ setup(
     description="A package for handling Database files",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/KDL-Solution/FileHandler",  # Replace with your repository URL
+    url="https://github.com/KDL-Solution/DBHandler",  # Replace with your repository URL
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

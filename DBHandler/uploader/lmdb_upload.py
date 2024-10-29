@@ -3,7 +3,7 @@ import cv2
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
-from handler import LMDBHandler
+from DBHandler.handler.lmdb_handler import LMDBHandler
 
 
 class LMDBUploader:
