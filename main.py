@@ -1,7 +1,8 @@
 from glob import glob
-from upload import LMDBUploader
-images = sorted(glob('data/biz_card_data/rebuild/images/*.jpg'))
-labels = sorted(glob('data/biz_card_data/rebuild/labels/*.json'))
+from uploader import LMDBUploader
+
+images = sorted(glob("data/biz_card_data/rebuild/images/*.jpg"))
+labels = sorted(glob("data/biz_card_data/rebuild/labels/*.json"))
 
 datalist = list(zip(images, labels))
 

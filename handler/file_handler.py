@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+
 class FileHandler(ABC):
     @abstractmethod
     def put_data(self, img, annots, idx):
@@ -19,7 +21,7 @@ class FileHandler(ABC):
     @abstractmethod
     def __len__(self):
         pass
-    
+
     @abstractmethod
     def __del__(self):
         pass

@@ -23,40 +23,46 @@ class LMDBHandler(FileHandler):
         self.db_path = Path(db_path).resolve()
         self.verbose = verbose
         self.mode = mode
-        
+
         if mode == "r":
             if not self.db_path.exists():
                 raise FileNotFoundError(f"{self.db_path} does not exist.")
-            self.env = lmdb.open(self.db_path,
-                                 readonly=True,
-                                 lock=False,
-                                 readahead=False,
-                                 meminit=False,
-                                 max_readers=max_readers)
+            self.env = lmdb.open(
+                self.db_path,
+                readonly=True,
+                lock=False,
+                readahead=False,
+                meminit=False,
+                max_readers=max_readers,
+            )
             if verbose:
                 print(f"{self.db_path} opened in READ-ONLY mode")
         elif mode == "w":
             if self.db_path.exists():
                 if not force:
-                    raise FileExistsError(f"{self.db_path} already exists. Use force=True to overwrite.")
+                    raise FileExistsError(
+                        f"{self.db_path} already exists. Use force=True to overwrite."
+                    )
                 self.db_path.rmdir()
             self.db_path.mkdir(parents=True, exist_ok=True)
-            self.env = lmdb.open(str(self.db_path),
-                                 map_size=int(LMDB_MAP_SIZE),
-                                 readonly=False,
-                                 max_readers=max_readers,)
-            
+            self.env = lmdb.open(
+                str(self.db_path),
+                map_size=int(LMDB_MAP_SIZE),
+                readonly=False,
+                max_readers=max_readers,
+            )
+
             if verbose:
                 print(f"{self.db_path} opened in WRITE mode")
         elif mode == "a":
             self.db_path.mkdir(parents=True, exist_ok=True)
-            self.env = lmdb.open(self.db_path, 
-                                 readonly=False, 
-                                 max_readers=max_readers)
+            self.env = lmdb.open(self.db_path, readonly=False, max_readers=max_readers)
             if verbose:
                 print(f"{self.db_path} opened in APPEND mode")
         else:
-            raise ValueError(f"Invalid mode: '{mode}'. Use 'r' for read-only, 'w' for write, 'a' for append.")
+            raise ValueError(
+                f"Invalid mode: '{mode}'. Use 'r' for read-only, 'w' for write, 'a' for append."
+            )
 
     def _get(self, key):
         with self.env.begin(write=False) as txn:
@@ -68,13 +74,13 @@ class LMDBHandler(FileHandler):
             txn.put(key, value)
 
     def put_data(self, img, annots, idx):
-        
+
         self._put_img(img, idx)
         self._put_annots(annots, idx)
-        
+
         if self.verbose:
             print(f"Data {idx} inserted.")
-            
+
         self.update_num_data()
         return idx
 
@@ -120,17 +126,17 @@ class LMDBHandler(FileHandler):
     def get_length(self):
         with self.env.begin(write=False) as txn:
             return txn.stat()["entries"]
-        
+
     def update_num_data(self):
-        
+
         num_data = self.get_length() // 2
         self._put_num_data(num_data)
         if self.verbose:
             print(f"{self.db_path} updated. NUM_DATA: {self._get_num_data()}")
-            
+
     def __len__(self):
         return self._get_num_data()
-    
+
     def close(self):
         self.env.close()
         if self.verbose:

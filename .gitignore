@@ -4,3 +4,9 @@
 **/*.mdb
 **/*.sqlite
 **/*.hdf5
+
+build/
+*.egg-info/
+dist/
+*.egg
+*.egg-info
