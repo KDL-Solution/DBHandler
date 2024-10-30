@@ -1,4 +1,4 @@
-# File Handler
+# DB Handler
 
 This repository provides a simple utility for handling Databases(LMDB, HDF5) with images and annotations. You can store and retrieve images and their corresponding annotations efficiently using this handler.
 
