@@ -9,9 +9,12 @@ This repository provides a simple utility for handling Databases(LMDB, HDF5) wit
 - Supports encoding images using `cv2` to save space.
 
 ## Installation
-
-1. Clone the repository:
-
+1. Install with pip!
+```bash
+pip install git+https://github.com/KDL-Solution/DBHandler
+```
+## Dev
+Clone the repository:
 ```bash
 git clone https://github.com/KDL-Solution/FileHandler
 cd FileHandler
@@ -27,8 +30,8 @@ How to Use
 ## Uploader 
 
 ```python
-#from uploader import LMDBUploader as Uploader
-from uploader import HDF5Uploader as Uploader
+#from DBHandler.uploader import LMDBUploader as Uploader
+from DBHandler.uploader import HDF5Uploader as Uploader
 # 이미지와 라벨 경로
 data_pairs = [
     ("./data/img1.jpg", "./data/label1.json"),
