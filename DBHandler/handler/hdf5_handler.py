@@ -1,9 +1,9 @@
 import h5py
 import numpy as np
 import json
-import os
 import cv2
 from pathlib import Path
+
 from .file_handler import FileHandler
 
 
@@ -16,6 +16,7 @@ class HDF5Handler(FileHandler):
         verbose=False,
         compression=None,
         compression_opts=None,
+        **kwargs,
     ):
         self.db_path = Path(db_path)
         self.verbose = verbose
@@ -29,7 +30,7 @@ class HDF5Handler(FileHandler):
         if mode == "r":
             if not self.db_path.exists():
                 raise FileNotFoundError(f"{self.db_path} does not exist.")
-            self.file = h5py.File(self.db_path, "r")
+            self.file = h5py.File(self.db_path, "r", **kwargs)
 
             if verbose:
                 print(f"{self.db_path} opened in READ-ONLY mode")
@@ -41,7 +42,7 @@ class HDF5Handler(FileHandler):
                     )
                 self.db_path.unlink()
 
-            self.file = h5py.File(self.db_path, "w")
+            self.file = h5py.File(self.db_path, "w", **kwargs)
             self.dtui8 = h5py.special_dtype(vlen=np.dtype("uint8"))
             self.utf8 = h5py.string_dtype(encoding="utf-8")
 
@@ -66,7 +67,7 @@ class HDF5Handler(FileHandler):
                 print(f"Created {self.db_path} in WRITE mode")
 
         elif mode == "a":
-            self.file = h5py.File(self.db_path, "a")
+            self.file = h5py.File(self.db_path, "a", **kwargs)
             if verbose:
                 print(f"{self.db_path} opened in APPEND mode")
         else:
@@ -78,7 +79,6 @@ class HDF5Handler(FileHandler):
         self.labels = self.file["labels"]
 
     def put_data(self, img, annots, idx):
-
         success, img_buffer = cv2.imencode(".jpg", img)
         if not success:
             raise ValueError(f"Failed to encode image at index {idx}")
@@ -114,3 +114,9 @@ class HDF5Handler(FileHandler):
             self.file.close()
             if self.verbose:
                 print(f"{self.db_path} closed.")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
