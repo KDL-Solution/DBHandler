@@ -1,6 +1,0 @@
-h5py
-lmdb
-numpy
-setuptools
-tqdm
-opencv-python
