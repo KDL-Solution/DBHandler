@@ -1,15 +1,8 @@
-from setuptools import setup, find_packages
-
-# requirements.txt 파일 읽기
-def parse_requirements(filename):
-    """ requirements.txt 파일을 읽고 패키지 리스트 반환 """
-    with open(filename, 'r') as file:
-        return [line.strip() for line in file if line and not line.startswith("#")]
+from setuptools import setup
 
 setup(
     name="DBHandler",
     version="0.1.1",
-    packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'h5py',
