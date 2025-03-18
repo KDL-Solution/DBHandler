@@ -30,7 +30,7 @@ class HDF5Handler(FileHandler):
         if mode == "r":
             if not self.db_path.exists():
                 raise FileNotFoundError(f"{self.db_path} does not exist.")
-            self.file = h5py.File(self.db_path, "r", **kwargs)
+            self.file = h5py.File(self.db_path, "r", libver="latest", swmr=True, **kwargs)
 
             if verbose:
                 print(f"{self.db_path} opened in READ-ONLY mode")
